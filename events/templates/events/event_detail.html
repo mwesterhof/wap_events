@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>event detail</title>
+        <script src="//cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
+        <script src="https://unpkg.com/vue-cookies@1.5.12/vue-cookies.js"></script>
+
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    </head>
+    <body>
+        <h1>{{ event }}</h1>
+        <div class="container">
+            <div id="app">
+                <ul>
+                    <li v-for="comment in comments">
+                        <b>${ comment.username }:</b>
+                        <i>${ comment.message }</i>
+                        <button v-on:click="deleteComment(comment.pk)">X</button>
+                    </li>
+                </ul>
+                <input v-model="currentComment" />
+                <button v-on:click="submit">+</button>
+            </div>
+
+        </div>
+
+        <script type="text/javascript">
+            var app = new Vue({
+                delimiters: ['${', '}'],
+                el: '#app',
+                data: {
+                    comments: [],
+                    currentComment: ''
+                },
+                mounted: function(){
+                    this.fetchComments()
+                },
+                methods: {
+                    fetchComments: function(){
+                        this.$http.get('api/comments/')
+                            .then(function(response){
+                                this.comments = response.data
+                            })
+                            .catch(function(err){
+                                console.log('broken')
+                                console.log(err)
+                            })
+                    },
+                    submit: function(){
+                        this.$http.post(
+                                'api/comments/',
+                                {message: this.currentComment},
+                                {headers: {'X-CSRFToken': $cookies.get('csrftoken')}}
+                            )
+                            .then(function(response){
+                                this.fetchComments()
+                                this.currentComment = ''
+                            })
+                            .catch(function(err){
+                                console.log(err)
+                            })
+                    },
+                    deleteComment: function(pk){
+                        console.log('delete ' + pk)
+                        this.$http.delete(
+                                'api/comments/' + pk + '/',
+                                {headers: {'X-CSRFToken': $cookies.get('csrftoken')}}
+                            )
+                            .then(function(response){
+                                this.fetchComments()
+                                this.currentComment = ''
+                            })
+                            .catch(function(err){
+                                console.log(err)
+                            })
+                    }
+                }
+            });
+            console.log(app);
+        </script>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    </body>
+</html>
