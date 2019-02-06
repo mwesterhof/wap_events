@@ -1,8 +1,11 @@
 from django.conf import settings
 from django.db import models
-from wagtail.admin.edit_handlers import FieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail_app_pages.models import AppPageMixin
+from wagtail.core.fields import StreamField
 from wagtail.core.models import Page
+
+from .blocks import CommentListBlock, CommentSubmitBlock
 
 
 class Event(models.Model):
@@ -25,6 +28,15 @@ class Comment(models.Model):
 class EventPage(AppPageMixin, Page):
     url_config = 'events.urls'
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
+
+    api_interface = StreamField([
+        ('comment_list', CommentListBlock()),
+        ('comment_submit', CommentSubmitBlock()),
+    ])
+
+    content_panels = Page.content_panels + [
+        StreamFieldPanel('api_interface')
+    ]
 
     settings_panels = Page.settings_panels + [
         FieldPanel('event')

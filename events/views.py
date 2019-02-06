@@ -18,8 +18,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.request.parent_page.event.comments.all()
 
-    def perform_create(self, serializer):
-        serializer.save(
-            user=self.request.user,
-            event=self.request.parent_page.event
-        )
+    def get_serializer_context(self):
+        return {
+            'user': self.request.user,
+            'event': self.request.parent_page.event
+        }

@@ -1,3 +1,4 @@
+{% load wagtailcore_tags %}
 <html>
     <head>
         <title>event detail</title>
@@ -10,17 +11,12 @@
     </head>
     <body>
         <h1>{{ event }}</h1>
+        <h2>{{ event.date }}</h2>
         <div class="container">
             <div id="app">
-                <ul>
-                    <li v-for="comment in comments">
-                        <b>${ comment.username }:</b>
-                        <i>${ comment.message }</i>
-                        <button v-on:click="deleteComment(comment.pk)">X</button>
-                    </li>
-                </ul>
-                <input v-model="currentComment" />
-                <button v-on:click="submit">+</button>
+                {% for element in page.api_interface %}
+                {% include_block element %}
+                {% endfor %}
             </div>
 
         </div>

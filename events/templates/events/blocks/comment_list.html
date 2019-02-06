@@ -1,0 +1,7 @@
+<ul>
+    <li v-for="comment in comments">
+        <b>${ comment.username }:</b>
+        <i>${ comment.message }</i>
+        <button v-on:click="deleteComment(comment.pk)">{{ self.delete_button_text }}</button>
+    </li>
+</ul>
