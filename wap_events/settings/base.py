@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'events',
     'search',
 
+    'django_extensions',
     'wagtail_react_streamfield',
     'wagtail_app_pages',
 
