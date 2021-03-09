@@ -1,0 +1,14 @@
+{% load wagtailcore_tags %}
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>react demo page</title>
+    </head>
+    <body>
+        <h1>react demo page</h1>
+        {% for element in page.api_interface %}
+            {% include_block element %}
+        {% endfor %}
+        
+    </body>
+</html>

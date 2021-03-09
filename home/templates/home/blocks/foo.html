@@ -1,0 +1,6 @@
+{% load wagtailcore_tags %}
+<h1>foo</h1>
+
+{% for element in self.bars %}
+{% include_block element %}
+{% endfor %}
